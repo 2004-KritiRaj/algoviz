@@ -1,25 +1,27 @@
-export default function ArrayBar({ value, maxValue, color = "default", width }) {
-  const colors = {
-    default:   "bg-[#5483B3]",
-    comparing: "bg-[#C1E8FF]",
-    swapping:  "bg-[#FF6B6B]",
-    sorted:    "bg-[#7DA0CA]",
-    pivot:     "bg-yellow-400",
+export default function ArrayBar({ value, maxValue, color = "default" }) {
+  const colorMap = {
+    default:   "#5483B3",
+    comparing: "#C1E8FF",
+    swapping:  "#FF6B6B",
+    sorted:    "#7DA0CA",
+    pivot:     "#FACC15",
   };
 
-  const heightPercent = (value / maxValue) * 100;
+  const glowMap = {
+    comparing: "0 0 8px rgba(193,232,255,0.7)",
+    swapping:  "0 0 8px rgba(255,107,107,0.8)",
+    pivot:     "0 0 10px rgba(250,204,21,0.9)",
+  };
 
   return (
     <div
-      className={`${colors[color]} rounded-t-[3px] transition-all duration-75`}
       style={{
-        height: `${heightPercent}%`,
+        height: `${(value / maxValue) * 100}%`,
         width: "100%",
-        boxShadow: color === "comparing"
-          ? "0 0 8px rgba(193,232,255,0.7)"
-          : color === "swapping"
-          ? "0 0 8px rgba(255,107,107,0.7)"
-          : "none",
+        background: colorMap[color] || colorMap.default,
+        boxShadow: glowMap[color] || "none",
+        borderRadius: "2px 2px 0 0",
+        transition: "height 0.08s, background 0.1s",
       }}
     />
   );
