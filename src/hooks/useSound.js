@@ -53,5 +53,25 @@ export function useSound() {
     });
   }
 
-  return { playCompare, playSwap, playSorted, playDone };
+  function playNodeVisit(nodeId) {
+    // each node gets a unique pitch based on its id
+    const freq = 300 + (nodeId * 80);
+    playTone({ frequency: freq, type: "sine", duration: 0.2, volume: 0.2 });
+}
+  function playNodeEnqueue(nodeId) {
+    // softer, higher pitched — discovery sound
+    const freq = 500 + (nodeId * 60);
+    playTone({ frequency: freq, type: "triangle", duration: 0.12, volume: 0.12 });
+}
+
+  function playGraphDone() {
+    // different chord from sorting — descending then ascending
+    [784, 659, 523, 659, 784, 1047].forEach((freq, i) => {
+        setTimeout(() => {
+            playTone({ frequency: freq, type: "sine", duration: 0.3, volume: 0.2 });
+        }, i * 120);
+    });
+}
+
+  return { playCompare, playSwap, playSorted, playDone, playNodeVisit, playNodeEnqueue, playGraphDone };
 }

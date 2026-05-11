@@ -393,7 +393,7 @@ export default function Visualizer() {
       </div>
 
       <p style={{ marginTop: "12px", fontSize: "10px", color: "#5483B3" }}>
-        {array.length} elements · {info.name} · AlgoViz © 2025
+        {array.length} elements · {info.name} · AlgoViz © 2026
       </p>
     </div>
   );

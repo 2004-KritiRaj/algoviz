@@ -2,9 +2,6 @@ import Visualizer from "./components/Visualizer";
 import { useState } from "react";
 import GraphVisualizer from "./components/GraphVisualizer";
 
-export default function App() {
-  return <Visualizer />;
-}
 
 export default function App() {
   const [tab, setTab] = useState("sorting");

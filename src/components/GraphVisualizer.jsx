@@ -3,6 +3,7 @@ import GraphNode from "./GraphNode";
 import { graphNodes, graphEdges, adjacencyList } from "../data/graphData";
 import { getBFSSteps } from "../algorithms/bfs";
 import { getDFSSteps } from "../algorithms/dfs";
+import { useSound } from "../hooks/useSound";
 
 const MODE_INFO = {
   bfs: {
@@ -34,6 +35,9 @@ export default function GraphVisualizer() {
   const [isDone, setIsDone]         = useState(false);
   const timeoutsRef                 = useRef([]);
   const info                        = MODE_INFO[mode];
+
+  const { playNodeVisit, playNodeEnqueue, playGraphDone } = useSound();
+  const [soundOn, setSoundOn] = useState(true);
 
   function handleNodeClick(id) {
     if (isRunning) return;
@@ -74,21 +78,24 @@ export default function GraphVisualizer() {
       ? getBFSSteps(startNode, adjacencyList)
       : getDFSSteps(startNode, adjacencyList);
 
-    const delay = 110 - speed;
+    const delay = 1100 - (speed * 10);
 
     steps.forEach((step, i) => {
       const t = setTimeout(() => {
         if (step.type === "enqueue" || step.type === "push") {
-          setNodeStates(prev => ({ ...prev, [step.node]: "inQueue" }));
-          setQueueStack(mode === "bfs" ? [...step.queue] : [...step.stack]);
+            if (soundOn) playNodeEnqueue(step.node);   
+            setNodeStates(prev => ({ ...prev, [step.node]: "inQueue" }));
+            setQueueStack(mode === "bfs" ? [...step.queue] : [...step.stack]);
         } else if (step.type === "visit") {
-          setNodeStates(prev => ({ ...prev, [step.node]: "visited" }));
-          setQueueStack(mode === "bfs" ? [...step.queue] : [...step.stack]);
-          setVisitedOrder([...step.visited]);
+            if (soundOn) playNodeVisit(step.node);
+            setNodeStates(prev => ({ ...prev, [step.node]: "visited" }));
+            setQueueStack(mode === "bfs" ? [...step.queue] : [...step.stack]);
+            setVisitedOrder([...step.visited]);
         } else if (step.type === "done") {
-          setIsRunning(false);
-          setIsDone(true);
-          setQueueStack([]);
+            if (soundOn) playGraphDone(); 
+            setIsRunning(false);
+            setIsDone(true);
+            setQueueStack([]);
         }
       }, i * delay);
       timeoutsRef.current.push(t);
@@ -229,9 +236,29 @@ export default function GraphVisualizer() {
               border: "1px solid rgba(255,107,107,0.3)",
               color: "#FF6B6B", cursor: "pointer",
             }}
-          >
+        >
             Reset
-          </button>
+        </button>
+        <button
+            onClick={() => setSoundOn(prev => !prev)}
+            style={{
+                padding: "8px 16px",
+                borderRadius: "10px",
+                fontSize: "clamp(10px,1.2vw,13px)",
+                fontWeight: "600",
+                background: soundOn
+                  ? "rgba(193,232,255,0.15)"
+                  : "rgba(84,131,179,0.1)",
+                border: soundOn
+                  ? "1px solid rgba(193,232,255,0.4)"
+                  : "1px solid rgba(84,131,179,0.3)",
+                color: soundOn ? "#C1E8FF" : "#5483B3",
+                cursor: "pointer",
+                transition: "all 0.3s",
+            }}
+        >
+            {soundOn ? "🔊 Sound On" : "🔇 Sound Off"}
+        </button>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
@@ -467,7 +494,7 @@ export default function GraphVisualizer() {
       </div>
 
       <p style={{ marginTop: "12px", fontSize: "10px", color: "#5483B3" }}>
-        {info.name} · V = 8 nodes · E = 9 edges · AlgoViz © 2025
+        {info.name} · V = 8 nodes · E = 9 edges · AlgoViz © 2026
       </p>
     </div>
   );
