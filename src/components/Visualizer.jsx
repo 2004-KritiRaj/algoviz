@@ -6,6 +6,7 @@ import { getInsertionSortSteps } from "../algorithms/insertionSort";
 import { getSelectionSortSteps } from "../algorithms/selectionSort";
 import { getMergeSortSteps } from "../algorithms/mergeSort";
 import { getQuickSortSteps } from "../algorithms/quickSort";
+import { useSound } from "../hooks/useSound";
 
 const ALGOS = {
   bubble: {
@@ -61,6 +62,17 @@ export default function Visualizer() {
   const info      = ALGOS[algo];
   const palette   = ALGO_COLORS[algo];
 
+  const { playCompare, playSwap, playSorted, playDone } = useSound();
+  const [soundOn, setSoundOn] = useState(true);
+
+// helper so you don't repeat the if(soundOn) check everywhere
+  const sound = {
+    compare: (val) => soundOn && playCompare(val, maxValue),
+    swap:    (val) => soundOn && playSwap(val, maxValue),
+    sorted:  ()    => soundOn && playSorted(),
+    done:    ()    => soundOn && playDone(),
+  };
+
   function handleNewArray() {
     timeoutsRef.current.forEach(clearTimeout);
     setBarColors({});
@@ -92,12 +104,14 @@ export default function Visualizer() {
     steps.forEach((step, i) => {
       const t = setTimeout(() => {
         if (step.type === "compare") {
+          sound.compare(step.array[step.indices[0]]);
           setBarColors(prev => {
             const next = { ...prev };
             step.indices.forEach(idx => (next[idx] = "comparing"));
             return next;
-          });
+  });
         } else if (step.type === "swap") {
+          sound.swap(step.array[step.indices[0]]);
           setArray([...step.array]);
           setBarColors(prev => {
             const next = { ...prev };
@@ -105,13 +119,16 @@ export default function Visualizer() {
             return next;
           });
         } else if (step.type === "overwrite") {
+          sound.swap(step.array[step.index]);
           setArray([...step.array]);
           setBarColors(prev => ({ ...prev, [step.index]: "swapping" }));
         } else if (step.type === "pivot") {
           setBarColors(prev => ({ ...prev, [step.index]: "pivot" }));
         } else if (step.type === "sorted") {
+          sound.sorted();
           setBarColors(prev => ({ ...prev, [step.index]: "sorted" }));
         } else if (step.type === "done") {
+          sound.done();
           setArray([...step.array]);
           setBarColors({});
           setIsRunning(false);
@@ -262,6 +279,26 @@ export default function Visualizer() {
             }}
           >
             {isRunning ? "Running..." : "▶ Visualize"}
+          </button>
+          <button
+            onClick={() => setSoundOn(prev => !prev)}
+            style={{
+              padding: "8px 16px",
+              borderRadius: "10px",
+              fontSize: "clamp(10px,1.2vw,13px)",
+              fontWeight: "600",
+              background: soundOn
+                ? "rgba(193,232,255,0.15)"
+                : "rgba(84,131,179,0.1)",
+              border: soundOn
+                ? "1px solid rgba(193,232,255,0.4)"
+                : "1px solid rgba(84,131,179,0.3)",
+              color: soundOn ? "#C1E8FF" : "#5483B3",
+              cursor: "pointer",
+              transition: "all 0.3s",
+            }}
+          >
+            {soundOn ? "🔊 Sound On" : "🔇 Sound Off"}
           </button>
           <button
             onClick={handleReset}
