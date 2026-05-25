@@ -36,7 +36,7 @@ export function useStepPlayer() {
 
     if (isPausedRef.current || index >= steps.length) return;
 
-    const delay = 105 - speedRef.current;
+    const delay = 1100 - (speedRef.current * 10);
 
     timeoutRef.current = setTimeout(() => {
       if (isPausedRef.current) return;

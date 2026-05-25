@@ -7,6 +7,7 @@ import { getSelectionSortSteps } from "../algorithms/selectionSort";
 import { getMergeSortSteps } from "../algorithms/mergeSort";
 import { getQuickSortSteps } from "../algorithms/quickSort";
 import { useSound } from "../hooks/useSound";
+import { useStepPlayer } from "../hooks/useStepPlayer";
 
 const ALGOS = {
   bubble: {
