@@ -114,7 +114,7 @@ export default function GraphVisualizer() {
       }}
     >
       {/* Navbar */}
-      <div className="w-full max-w-screen-xl flex items-center mb-6">
+      {/* <div className="w-full max-w-screen-xl flex items-center mb-6">
         <h1
           style={{
             fontSize: "clamp(20px,3vw,32px)",
@@ -126,7 +126,7 @@ export default function GraphVisualizer() {
         >
           ALGO<span style={{ color: "#7DA0CA" }}>VIZ</span>
         </h1>
-      </div>
+      </div> */}
 
       {/* BFS / DFS Toggle */}
       <div className="w-full max-w-screen-xl flex gap-3 mb-5 flex-wrap">
@@ -142,7 +142,7 @@ export default function GraphVisualizer() {
               fontSize: "clamp(11px,1.5vw,14px)",
               fontWeight: "600",
               cursor: isRunning ? "not-allowed" : "pointer",
-              transition: "all 0.3s",
+              transition: "all 0.25s ease",
               background: mode === m
                 ? `linear-gradient(135deg, ${MODE_INFO[m].color}33, ${MODE_INFO[m].color}55)`
                 : "rgba(5,38,89,0.5)",
@@ -152,6 +152,22 @@ export default function GraphVisualizer() {
               color: mode === m ? MODE_INFO[m].color : "#5483B3",
               boxShadow: mode === m ? `0 4px 20px ${MODE_INFO[m].color}33` : "none",
               transform: mode === m ? "translateY(-2px)" : "none",
+            }}
+            onMouseEnter={e => {
+              if (!isRunning && mode !== m) {
+                e.currentTarget.style.background = `${MODE_INFO[m].color}22`;
+                e.currentTarget.style.borderColor = `${MODE_INFO[m].color}88`;
+                e.currentTarget.style.color = MODE_INFO[m].color;
+                e.currentTarget.style.transform = "translateY(-1px)";
+              }
+            }}
+            onMouseLeave={e => {
+              if (mode !== m) {
+                e.currentTarget.style.background = "rgba(5,38,89,0.5)";
+                e.currentTarget.style.borderColor = "rgba(84,131,179,0.3)";
+                e.currentTarget.style.color = "#5483B3";
+                e.currentTarget.style.transform = "none";
+              }
             }}
           >
             {MODE_INFO[m].name}
@@ -224,6 +240,16 @@ export default function GraphVisualizer() {
               boxShadow: isRunning ? "none" : `0 4px 20px ${info.color}66`,
               transition: "all 0.3s",
             }}
+            onMouseEnter={e => {
+            if (!isRunning) {
+              e.currentTarget.style.transform = "translateY(-2px) scale(1.02)";
+              e.currentTarget.style.boxShadow = `0 8px 28px ${info.color}88`;
+            }
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = "translateY(0) scale(1)";
+              e.currentTarget.style.boxShadow = isRunning ? "none" : `0 4px 20px ${info.color}66`;
+            }}
           >
             {isRunning ? "Running..." : "▶ Visualize"}
           </button>
@@ -236,7 +262,17 @@ export default function GraphVisualizer() {
               border: "1px solid rgba(255,107,107,0.3)",
               color: "#FF6B6B", cursor: "pointer",
             }}
-        >
+            onMouseEnter={e => {
+              e.currentTarget.style.background = "rgba(255,107,107,0.2)";
+              e.currentTarget.style.transform = "translateY(-1px)";
+              e.currentTarget.style.boxShadow = "0 4px 12px rgba(255,107,107,0.2)";
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = "rgba(255,107,107,0.1)";
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = "none";
+            }}
+          >
             Reset
         </button>
         <button

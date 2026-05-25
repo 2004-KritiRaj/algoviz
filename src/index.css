@@ -1,3 +1,103 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ── Smooth scrolling ── */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ── Remove default button outline, keep accessibility ── */
+button:focus-visible {
+  outline: 2px solid #7DA0CA;
+  outline-offset: 2px;
+}
+
+/* ── Range slider styling ── */
+input[type="range"] {
+  cursor: pointer;
+  height: 4px;
+  border-radius: 4px;
+}
+
+input[type="range"]:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Button press effect ── */
+button:not(:disabled):active {
+  transform: scale(0.96) !important;
+}
+
+/* ── Hover lift effect for cards ── */
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(2,16,36,0.5);
+}
+
+/* ── Bar bounce animation on new array ── */
+@keyframes barDrop {
+  0%   { transform: scaleY(0); opacity: 0; }
+  70%  { transform: scaleY(1.05); }
+  100% { transform: scaleY(1); opacity: 1; }
+}
+
+.bar-animate {
+  animation: barDrop 0.35s ease forwards;
+  transform-origin: bottom;
+}
+
+/* ── Fade in animation ── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+/* ── Glow pulse for sorted state ── */
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 6px rgba(82,183,136,0.4); }
+  50%       { box-shadow: 0 0 16px rgba(82,183,136,0.8); }
+}
+
+.sorted-glow {
+  animation: glowPulse 1s ease infinite;
+}
+
+/* ── Hide GitHub label on very small screens ── */
+@media (max-width: 480px) {
+  .github-label {
+    display: none;
+  }
+}
+
+/* ── Stack algo tabs vertically on small screens ── */
+@media (max-width: 500px) {
+  .algo-tabs-wrap {
+    flex-direction: column;
+  }
+}
+
+/* ── Node pulse animation for graph ── */
+@keyframes nodePulse {
+  0%, 100% { r: 22; }
+  50%       { r: 25; }
+}
+
+/* ── Done celebration flash ── */
+@keyframes celebrationFlash {
+  0%   { opacity: 0; transform: scale(0.8); }
+  50%  { opacity: 1; transform: scale(1.05); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.celebrate {
+  animation: celebrationFlash 0.5s ease forwards;
+}

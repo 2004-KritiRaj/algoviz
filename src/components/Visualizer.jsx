@@ -153,7 +153,7 @@ export default function Visualizer() {
       }}
     >
       {/* Navbar — no badge */}
-      <div className="w-full max-w-screen-xl flex items-center mb-6 md:mb-8">
+      {/* <div className="w-full max-w-screen-xl flex items-center mb-6 md:mb-8">
         <h1
           className="font-bold tracking-widest"
           style={{
@@ -165,7 +165,7 @@ export default function Visualizer() {
         >
           ALGO<span style={{ color: "#7DA0CA" }}>VIZ</span>
         </h1>
-      </div>
+      </div> */}
 
       {/* Algorithm Selector */}
       <div className="w-full max-w-screen-xl flex gap-2 mb-5 flex-wrap">
@@ -191,6 +191,22 @@ export default function Visualizer() {
               color: algo === key ? val.color : "#5483B3",
               boxShadow: algo === key ? `0 4px 20px ${val.color}33` : "none",
               transform: algo === key ? "translateY(-2px)" : "none",
+            }}
+            onMouseEnter={e => {
+              if (!isRunning && algo !== key) {
+                e.currentTarget.style.background = `${val.color}22`;
+                e.currentTarget.style.borderColor = `${val.color}88`;
+                e.currentTarget.style.color = val.color;
+                e.currentTarget.style.transform = "translateY(-1px)";
+              }
+            }}
+            onMouseLeave={e => {
+              if (algo !== key) {
+                e.currentTarget.style.background = "rgba(5,38,89,0.5)";
+                e.currentTarget.style.borderColor = "rgba(84,131,179,0.3)";
+                e.currentTarget.style.color = "#5483B3";
+                e.currentTarget.style.transform = "none";
+              }
             }}
           >
             {val.name}
@@ -250,36 +266,60 @@ export default function Visualizer() {
       >
         {/* Buttons */}
         <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+          // Find this button and replace it:
           <button
-            onClick={handleNewArray}
-            disabled={isRunning}
-            style={{
-              padding: "8px 16px", borderRadius: "10px",
-              fontSize: "clamp(10px,1.2vw,13px)", fontWeight: "600",
-              background: "rgba(193,232,255,0.08)",
-              border: "1px solid rgba(193,232,255,0.25)",
-              color: "#C1E8FF", cursor: isRunning ? "not-allowed" : "pointer",
-            }}
-          >
-            New Array
-          </button>
-          <button
-            onClick={handleVisualize}
-            disabled={isRunning}
-            style={{
-              padding: "8px 20px", borderRadius: "10px",
-              fontSize: "clamp(10px,1.2vw,13px)", fontWeight: "700",
-              background: isRunning
-                ? "rgba(84,131,179,0.3)"
-                : `linear-gradient(135deg, ${info.color}, #C1E8FF)`,
-              border: "none",
-              color: "#021024", cursor: isRunning ? "not-allowed" : "pointer",
-              boxShadow: isRunning ? "none" : `0 4px 20px ${info.color}66`,
-              transition: "all 0.3s",
-            }}
-          >
-            {isRunning ? "Running..." : "▶ Visualize"}
-          </button>
+          onClick={handleNewArray}
+          disabled={isRunning}
+          style={{
+            padding: "8px 16px", borderRadius: "10px",
+            fontSize: "clamp(10px,1.2vw,13px)", fontWeight: "600",
+            background: "rgba(193,232,255,0.08)",
+            border: "1px solid rgba(193,232,255,0.25)",
+            color: "#C1E8FF", cursor: isRunning ? "not-allowed" : "pointer",
+            transition: "all 0.25s ease",
+          }}
+          onMouseEnter={e => {
+            if (!isRunning) {
+              e.currentTarget.style.background = "rgba(193,232,255,0.18)";
+              e.currentTarget.style.transform = "translateY(-1px)";
+              e.currentTarget.style.boxShadow = "0 4px 12px rgba(193,232,255,0.15)";
+            }
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.background = "rgba(193,232,255,0.08)";
+            e.currentTarget.style.transform = "translateY(0)";
+            e.currentTarget.style.boxShadow = "none";
+          }}
+        >
+          New Array
+        </button>
+        <button
+          onClick={handleVisualize}
+          disabled={isRunning}
+          style={{
+            padding: "8px 20px", borderRadius: "10px",
+            fontSize: "clamp(10px,1.2vw,13px)", fontWeight: "700",
+            background: isRunning
+              ? "rgba(84,131,179,0.3)"
+              : `linear-gradient(135deg, ${info.color}, #C1E8FF)`,
+            border: "none", color: "#021024",
+            cursor: isRunning ? "not-allowed" : "pointer",
+            boxShadow: isRunning ? "none" : `0 4px 20px ${info.color}66`,
+            transition: "all 0.25s ease",
+          }}
+          onMouseEnter={e => {
+            if (!isRunning) {
+              e.currentTarget.style.transform = "translateY(-2px) scale(1.02)";
+              e.currentTarget.style.boxShadow = `0 8px 28px ${info.color}88`;
+            }
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.transform = "translateY(0) scale(1)";
+            e.currentTarget.style.boxShadow = isRunning ? "none" : `0 4px 20px ${info.color}66`;
+          }}
+        >
+          {isRunning ? "Running..." : "▶ Visualize"}
+        </button>
           <button
             onClick={() => setSoundOn(prev => !prev)}
             style={{
@@ -308,6 +348,17 @@ export default function Visualizer() {
               background: "rgba(255,107,107,0.1)",
               border: "1px solid rgba(255,107,107,0.3)",
               color: "#FF6B6B", cursor: "pointer",
+              transition: "all 0.25s ease",
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background = "rgba(255,107,107,0.2)";
+              e.currentTarget.style.transform = "translateY(-1px)";
+              e.currentTarget.style.boxShadow = "0 4px 12px rgba(255,107,107,0.2)";
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = "rgba(255,107,107,0.1)";
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = "none";
             }}
           >
             Reset
