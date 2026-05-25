@@ -98,6 +98,18 @@ button:not(:disabled):active {
   100% { opacity: 1; transform: scale(1); }
 }
 
+/* Navbar wraps on tiny screens */
+@media (max-width: 640px) {
+  .nav-tabs {
+    gap: 2px;
+  }
+
+  .nav-tabs button {
+    padding: 6px 8px !important;
+    font-size: 10px !important;
+  }
+}
+
 .celebrate {
   animation: celebrationFlash 0.5s ease forwards;
 }

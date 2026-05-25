@@ -57,7 +57,7 @@ export default function Visualizer() {
   const [speed, setSpeed]       = useState(50);
   const [algo, setAlgo]         = useState("bubble");
 
-  const maxValue  = Math.max(...array);
+  const maxValue = array.length > 0 ? Math.max(...array) : 100;
   const info      = ALGOS[algo];
   const palette   = ALGO_COLORS[algo];
 
@@ -276,7 +276,6 @@ export default function Visualizer() {
       >
         {/* Buttons */}
         <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-          // Find this button and replace it:
           <button
           onClick={handleNewArray}
           disabled={isRunning}

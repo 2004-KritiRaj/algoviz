@@ -76,12 +76,15 @@ export default function App() {
 
           {/* Tab Switcher */}
           <div
+            className="nav-tabs"
             style={{
               display: "flex",
               background: "rgba(5,38,89,0.6)",
-              borderRadius: "12px", padding: "4px",
+              borderRadius: "12px", 
+              padding: "4px",
               border: "1px solid rgba(84,131,179,0.3)",
-              gap: "4px", flexWrap: "wrap",
+              gap: "4px", 
+              flexWrap: "wrap",
             }}
           >
             {TABS.map(({ key, icon, label }) => {
