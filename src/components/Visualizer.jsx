@@ -53,10 +53,8 @@ export default function Visualizer() {
   const [array, setArray]       = useState(() => generateRandomArray(50));
   const [arraySize, setArraySize] = useState(50);
   const [barColors, setBarColors] = useState({});
-  const [isRunning, setIsRunning] = useState(false);
   const [speed, setSpeed]       = useState(50);
   const [algo, setAlgo]         = useState("bubble");
-  const timeoutsRef             = useRef([]);
 
   const maxValue  = Math.max(...array);
   const info      = ALGOS[algo];
@@ -64,6 +62,21 @@ export default function Visualizer() {
 
   const { playCompare, playSwap, playSorted, playDone } = useSound();
   const [soundOn, setSoundOn] = useState(true);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [totalSteps, setTotalSteps]   = useState(0);
+
+  const isPausedRef = useRef(false);
+  const {
+  isRunning,
+  isPaused,
+  currentStep,
+  totalSteps,
+  play,
+  pause,
+  resume,
+  stop,
+  updateSpeed,
+} = useStepPlayer();
 
 // helper so you don't repeat the if(soundOn) check everywhere
   const sound = {
@@ -74,9 +87,8 @@ export default function Visualizer() {
   };
 
   function handleNewArray() {
-    timeoutsRef.current.forEach(clearTimeout);
+    stop();
     setBarColors({});
-    setIsRunning(false);
     setArray(generateRandomArray(arraySize));
   }
 
@@ -90,6 +102,7 @@ export default function Visualizer() {
 
   function handleAlgoChange(newAlgo) {
     if (isRunning) return;
+    stop();
     setAlgo(newAlgo);
     setBarColors({});
     setArray(generateRandomArray(arraySize));
@@ -97,21 +110,21 @@ export default function Visualizer() {
 
   function handleVisualize() {
     if (isRunning) return;
-    setIsRunning(true);
     const steps = info.fn(array);
-    const delay = 105 - speed;
 
-    steps.forEach((step, i) => {
-      const t = setTimeout(() => {
+    play(
+      steps,
+      speed,
+      (step) => {
         if (step.type === "compare") {
-          sound.compare(step.array[step.indices[0]]);
+          if (soundOn) sound.compare(step.array[step.indices[0]]);
           setBarColors(prev => {
             const next = { ...prev };
             step.indices.forEach(idx => (next[idx] = "comparing"));
             return next;
-  });
+          });
         } else if (step.type === "swap") {
-          sound.swap(step.array[step.indices[0]]);
+          if (soundOn) sound.swap(step.array[step.indices[0]]);
           setArray([...step.array]);
           setBarColors(prev => {
             const next = { ...prev };
@@ -119,29 +132,27 @@ export default function Visualizer() {
             return next;
           });
         } else if (step.type === "overwrite") {
-          sound.swap(step.array[step.index]);
+          if (soundOn) sound.swap(step.array[step.index]);
           setArray([...step.array]);
           setBarColors(prev => ({ ...prev, [step.index]: "swapping" }));
         } else if (step.type === "pivot") {
           setBarColors(prev => ({ ...prev, [step.index]: "pivot" }));
         } else if (step.type === "sorted") {
-          sound.sorted();
+          if (soundOn) sound.sorted();
           setBarColors(prev => ({ ...prev, [step.index]: "sorted" }));
         } else if (step.type === "done") {
-          sound.done();
+          if (soundOn) sound.done();
           setArray([...step.array]);
           setBarColors({});
-          setIsRunning(false);
         }
-      }, i * delay);
-      timeoutsRef.current.push(t);
-    });
+      },
+      () => {} 
+    );
   }
 
-  function handleReset() {
-    timeoutsRef.current.forEach(clearTimeout);
+  function handleReset() {  
+    stop();
     setBarColors({});
-    setIsRunning(false);
   }
 
   return (
@@ -320,6 +331,23 @@ export default function Visualizer() {
         >
           {isRunning ? "Running..." : "▶ Visualize"}
         </button>
+        {(isRunning || isPaused) && (
+          <button
+            onClick={() => isPaused ? resume() : pause()}
+            style={{
+              padding: "8px 16px", borderRadius: "10px",
+              fontSize: "clamp(10px,1.2vw,13px)", fontWeight: "600",
+              background: isPaused ? "rgba(82,183,136,0.15)" : "rgba(255,179,71,0.15)",
+              border: isPaused
+                ? "1px solid rgba(82,183,136,0.5)"
+                : "1px solid rgba(255,179,71,0.5)",
+              color: isPaused ? "#52B788" : "#FFB347",
+              cursor: "pointer", transition: "all 0.25s",
+            }}
+          >
+            {isPaused ? "▶ Resume" : "⏸ Pause"}
+          </button>
+        )}
           <button
             onClick={() => setSoundOn(prev => !prev)}
             style={{
@@ -380,7 +408,10 @@ export default function Visualizer() {
               SPEED — {speed}
             </label>
             <input type="range" min="1" max="100" value={speed}
-              onChange={e => setSpeed(Number(e.target.value))}
+              onChange={e => {
+                setSpeed(Number(e.target.value));
+                updateSpeed(Number(e.target.value));
+              }}
               style={{ accentColor: "#7DA0CA", width: "clamp(80px,10vw,130px)" }} />
           </div>
         </div>
@@ -406,7 +437,32 @@ export default function Visualizer() {
           ))}
         </div>
       </div>
-
+      {/* Step Counter */}
+      {totalSteps > 0 && (
+        <div className="w-full max-w-screen-xl mb-4">
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
+            <span style={{ fontSize: "10px", color: "#5483B3" }}>
+              {isPaused ? "⏸ Paused" : isRunning ? "▶ Running" : "✓ Complete"}
+            </span>
+            <span style={{ fontSize: "10px", color: "#7DA0CA", fontFamily: "monospace" }}>
+              Step {currentStep} / {totalSteps}
+            </span>
+          </div>
+          <div style={{ width: "100%", height: "4px", background: "rgba(84,131,179,0.2)", borderRadius: "4px", overflow: "hidden" }}>
+            <div
+              style={{
+                width: `${(currentStep / totalSteps) * 100}%`,
+                height: "100%",
+                background: `linear-gradient(90deg, ${info.color}, #C1E8FF)`,
+                borderRadius: "4px",
+                transition: "width 0.15s ease",
+                boxShadow: `0 0 8px ${info.color}88`,
+              }}
+            />
+          </div>
+        </div>
+      )}
+      
       {/* Visualizer */}
       <div
         className="w-full max-w-screen-xl rounded-2xl p-4 md:p-6"

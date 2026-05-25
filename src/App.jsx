@@ -1,10 +1,13 @@
 import { useState } from "react";
 import Visualizer from "./components/Visualizer";
 import GraphVisualizer from "./components/GraphVisualizer";
+import BinarySearchVisualizer from "./components/BinarySearchVisualizer";
+
 
 export default function App() {
   const [tab, setTab] = useState("sorting");
   const [transitioning, setTransitioning] = useState(false);
+  const [tab, setTab] = useState("sorting");
 
   function switchTab(newTab) {
     if (newTab === tab) return;
@@ -89,6 +92,7 @@ export default function App() {
             {[
               { key: "sorting", icon: "📊", label: "Sorting" },
               { key: "graph",   icon: "🔗", label: "Graph" },
+              { key: "binary", icon: "🔍", label: "Binary Search" },
             ].map(({ key, icon, label }) => (
               <button
                 key={key}
@@ -116,6 +120,8 @@ export default function App() {
           </div>
 
           {/* Right side — GitHub link */}
+
+          <a
           
             href="https://github.com/YOUR_USERNAME/algoviz"
             target="_blank"
@@ -165,7 +171,12 @@ export default function App() {
           transition: "opacity 0.2s ease, transform 0.2s ease",
         }}
       >
-        {tab === "sorting" ? <Visualizer /> : <GraphVisualizer />}
+        {tab === "sorting"
+          ? <Visualizer />
+          : tab === "graph"
+          ? <GraphVisualizer />
+          : <BinarySearchVisualizer />
+        }
       </div>
     </div>
   );
