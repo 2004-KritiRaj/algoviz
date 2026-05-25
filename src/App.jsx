@@ -7,7 +7,6 @@ import BinarySearchVisualizer from "./components/BinarySearchVisualizer";
 export default function App() {
   const [tab, setTab] = useState("sorting");
   const [transitioning, setTransitioning] = useState(false);
-  const [tab, setTab] = useState("sorting");
 
   function switchTab(newTab) {
     if (newTab === tab) return;

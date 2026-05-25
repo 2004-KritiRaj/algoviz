@@ -62,8 +62,6 @@ export default function Visualizer() {
 
   const { playCompare, playSwap, playSorted, playDone } = useSound();
   const [soundOn, setSoundOn] = useState(true);
-  const [currentStep, setCurrentStep] = useState(0);
-  const [totalSteps, setTotalSteps]   = useState(0);
 
   const isPausedRef = useRef(false);
   const {
@@ -462,7 +460,7 @@ export default function Visualizer() {
           </div>
         </div>
       )}
-      
+
       {/* Visualizer */}
       <div
         className="w-full max-w-screen-xl rounded-2xl p-4 md:p-6"

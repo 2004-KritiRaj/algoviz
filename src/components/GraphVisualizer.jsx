@@ -113,20 +113,6 @@ export default function GraphVisualizer() {
         fontFamily: "'Segoe UI', sans-serif",
       }}
     >
-      {/* Navbar */}
-      {/* <div className="w-full max-w-screen-xl flex items-center mb-6">
-        <h1
-          style={{
-            fontSize: "clamp(20px,3vw,32px)",
-            fontWeight: "700",
-            letterSpacing: "0.2em",
-            color: "#C1E8FF",
-            textShadow: "0 0 30px rgba(193,232,255,0.4)",
-          }}
-        >
-          ALGO<span style={{ color: "#7DA0CA" }}>VIZ</span>
-        </h1>
-      </div> */}
 
       {/* BFS / DFS Toggle */}
       <div className="w-full max-w-screen-xl flex gap-3 mb-5 flex-wrap">
