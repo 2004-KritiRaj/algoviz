@@ -2,7 +2,7 @@
 
 > An interactive algorithm visualizer built with React — watch sorting, graph traversal, and binary search algorithms come to life with step-by-step animation.
 
-🔗 **[Live Demo](https://YOUR_VERCEL_LINK.vercel.app)**
+🔗 **[Live Demo](https://algoviz-teal.vercel.app/)**
 
 ---
 
