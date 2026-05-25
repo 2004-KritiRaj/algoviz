@@ -4,8 +4,6 @@
 
 🔗 **[Live Demo](https://YOUR_VERCEL_LINK.vercel.app)**
 
-![AlgoViz Preview](./screenshots/preview.png)
-
 ---
 
 ## ✨ Features
@@ -71,7 +69,7 @@ src/
 
 ```bash
 # Clone the repo
-git clone https://github.com/YOUR_USERNAME/algoviz.git
+git clone https://github.com/2004-KritiRaj/algoviz.git
 cd algoviz
 
 # Install dependencies
@@ -99,14 +97,6 @@ Every algorithm returns an array of "steps" describing what happened:
 A custom `useStepPlayer` hook then plays these steps one by one with configurable speed, pause, and resume — without the algorithm knowing anything about React or animation.
 
 This means adding a new algorithm is as simple as writing a step-generator function and plugging it in.
-
----
-
-## 📸 Screenshots
-
-| Sorting | Graph | Quiz |
-|---|---|---|
-| ![Sorting](./screenshots/sorting.png) | ![Graph](./screenshots/graph.png) | ![Quiz](./screenshots/quiz.png) |
 
 ---
 
